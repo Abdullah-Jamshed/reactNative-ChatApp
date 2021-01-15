@@ -8,7 +8,6 @@ const DrawrContent = ({navigation}) => {
       <Text>ABC</Text>
       <TouchableOpacity onPress={() => navigation.navigate('ChatScreen')}>
         <Text>Chat</Text>
-        <Text>Chat</Text>
       </TouchableOpacity>
     </View>
   );
