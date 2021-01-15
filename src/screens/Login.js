@@ -22,7 +22,7 @@ const Login = ({
   initializing,
   initializationActionSet,
 }) => {
-  
+
   const [loading, setLoading] = useState(false);
 
   const facebookLogin = async () => {
@@ -47,7 +47,7 @@ const Login = ({
     auth()
       .signInWithCredential(facebookCredential)
       .then((user) => {
-        console.log('user ==>', user);
+        // console.log('user ==>', user);
       })
       .catch((err) => {
         console.log('error ==>', err);
@@ -55,7 +55,7 @@ const Login = ({
   };
 
   function onAuthStateChanged(user) {
-    console.log(user);
+    // console.log(user);
     if (user) {
       setLoading(false);
       userActionSet(user);

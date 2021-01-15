@@ -34,17 +34,17 @@ const Home = ({
       userActionSet(null);
       navigation.navigate('LoginScreen');
     }
-    console.log(user);
+    // console.log(user);
     if (initializing) initializationActionSet(false);
   }
-
-  const signOut = () => {
-    auth().signOut();
-  };
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
+  }, []);
+
+  useEffect(() => {
+    console.log('didMount');
   }, []);
 
   return (
@@ -56,7 +56,6 @@ const Home = ({
             <View>
               <Text>Name: {user.displayName}</Text>
               <Text>uid: {user.uid}</Text>
-              {/* <Button title="SignOut" onPress={signOut} /> */}
             </View>
           )}
         </View>
