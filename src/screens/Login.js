@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   SafeAreaView,
@@ -10,9 +10,19 @@ import {
 } from 'react-native';
 
 const Login = () => {
-  return <></>;
+  return (
+    <View style={styles.container}>
+      <Button title="Go back" />
+    </View>
+  );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default Login;
