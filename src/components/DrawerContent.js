@@ -17,7 +17,7 @@ import auth from '@react-native-firebase/auth';
 const {width, height} = Dimensions.get('window');
 
 const DrawrContent = ({navigation, user}) => {
-  console.log('Login user ==>', user);
+//   console.log('Login user ==>', user);
   const signOut = () => {
     auth().signOut();
   };
