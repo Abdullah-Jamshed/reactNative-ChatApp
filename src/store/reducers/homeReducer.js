@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
   initializing: true,
+  user: null,
 };
 
 export default (state = INITIAL_STATE, action) => {

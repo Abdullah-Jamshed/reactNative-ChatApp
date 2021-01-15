@@ -31,6 +31,7 @@ const Home = ({
     if (user) {
       userActionSet(user);
     } else {
+      userActionSet(null);
       navigation.navigate('LoginScreen');
     }
     console.log(user);
@@ -55,7 +56,7 @@ const Home = ({
             <View>
               <Text>Name: {user.displayName}</Text>
               <Text>uid: {user.uid}</Text>
-              <Button title="SignOut" onPress={signOut} />
+              {/* <Button title="SignOut" onPress={signOut} /> */}
             </View>
           )}
         </View>

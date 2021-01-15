@@ -18,17 +18,18 @@ import DrawerContent from '../components/DrawerContent';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const HomeStack = () => {
-  return (
-    <Stack.Navigator headerMode={false}>
-      <Stack.Screen name="HomeScreen" component={Home} headerShown={false} />
-    </Stack.Navigator>
-  );
-};
 const LoginStack = () => {
   return (
     <Stack.Navigator headerMode={false}>
       <Stack.Screen name="LoginScreen" component={Login} headerShown={false} />
+    </Stack.Navigator>
+  );
+};
+
+const HomeStack = () => {
+  return (
+    <Stack.Navigator headerMode={false}>
+      <Stack.Screen name="HomeScreen" component={Home} headerShown={false} />
     </Stack.Navigator>
   );
 };
@@ -44,8 +45,12 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
+        <Drawer.Screen
+          name="LoginScreen"
+          component={LoginStack}
+          options={{swipeEnabled: false}}
+        />
         <Drawer.Screen name="HomeScreen" component={HomeStack} />
-        <Drawer.Screen name="LoginScreen" component={LoginStack} />
         <Drawer.Screen name="ChatScreen" component={ChatStack} />
       </Drawer.Navigator>
     </NavigationContainer>
