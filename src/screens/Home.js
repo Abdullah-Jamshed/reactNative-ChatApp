@@ -10,57 +10,36 @@ import {
   Button,
 } from 'react-native';
 
-import {LoginManager, AccessToken} from 'react-native-fbsdk';
+import {connect} from 'react-redux';
+import {userAction, initializationAction} from '../store/actions/homeActions';
+
 import auth from '@react-native-firebase/auth';
 
-// fetch(
-//   `https://graph.facebook.com/${data.userID}?fields=name,birthday,last_name,email&access_token=${data.accessToken}`,
-// )
-
-const Home = () => {
+const Home = ({
+  user,
+  userActionSet,
+  initializationActionSet,
+  initializing,
+  navigation,
+}) => {
   // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
+  // const [initializing, setInitializing] = useState(true);
+  // const [user, setUser] = useState();
 
   // Handle user state changes
   function onAuthStateChanged(user) {
+    if (user) {
+      userActionSet(user);
+    } else {
+      navigation.navigate('LoginScreen');
+    }
     console.log(user);
-    setUser(user);
-    if (initializing) setInitializing(false);
+    if (initializing) initializationActionSet(false);
   }
-
-  const facebookLogin = async () => {
-    const result = await LoginManager.logInWithPermissions([
-      'public_profile',
-      'email',
-    ]);
-    if (result.isCancelled) {
-      throw 'User cancelled the login process';
-    }
-
-    const data = await AccessToken.getCurrentAccessToken();
-    if (!data) {
-      throw 'Something went wrong obtaining access token';
-    }
-
-    const facebookCredential = auth.FacebookAuthProvider.credential(
-      data.accessToken,
-    );
-
-    auth()
-      .signInWithCredential(facebookCredential)
-      .then((user) => {
-        console.log('user ==>', user);
-      })
-      .catch((err) => {
-        console.log('error ==>', err);
-      });
-  };
 
   const signOut = () => {
-    auth()
-    .signOut()
-  }
+    auth().signOut();
+  };
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
@@ -71,7 +50,7 @@ const Home = () => {
     <>
       {!initializing && (
         <View style={styles.container}>
-          {!user && <Button title="Facebook Login" onPress={facebookLogin} />}
+          {/* {!user && <Button title="Facebook Login" onPress={facebookLogin} />} */}
           {user && (
             <View>
               <Text>Name: {user.displayName}</Text>
@@ -93,4 +72,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+const mapStateToProps = (state) => {
+  return {
+    initializing: state.homeReducer.initializing,
+    user: state.homeReducer.user,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    userActionSet: (user) => dispatch(userAction(user)),
+    initializationActionSet: (flag) => dispatch(initializationAction(flag)),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

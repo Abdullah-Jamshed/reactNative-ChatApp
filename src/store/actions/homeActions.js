@@ -1,14 +1,13 @@
-const viewModeAction = (mode) => {
+const userAction = (user) => {
   return (dispatch) => {
-    dispatch({type: 'CATEGORY_VIEW', payload: {mode}});
+    dispatch({type: 'USER', payload: {user}});
   };
 };
 
-const selectedCategoryAction = (category) => {
-  console.log(category);
+const initializationAction = (flag) => {
   return (dispatch) => {
-    dispatch({type: 'SELECTED_CATEGORY', payload: {category}});
+    dispatch({type: 'INITIALIZATION', payload: {flag}});
   };
 };
 
-export {viewModeAction, selectedCategoryAction};
+export {userAction, initializationAction};

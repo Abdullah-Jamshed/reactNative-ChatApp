@@ -1,19 +1,18 @@
 const INITIAL_STATE = {
-  viewMode: 'chart',
-  selectedCategory: null,
+  initializing: true,
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'CATEGORY_VIEW':
+    case 'USER':
       return {
         ...state,
-        viewMode: action.payload.mode,
+        user: action.payload.user,
       };
-    case 'SELECTED_CATEGORY':
+    case 'INITIALIZATION':
       return {
         ...state,
-        selectedCategory: action.payload.category,
+        initializing: action.payload.flag,
       };
     default:
       return state;

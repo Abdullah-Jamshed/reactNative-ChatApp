@@ -12,7 +12,7 @@ import Home from '../screens/Home';
 import Login from '../screens/Login';
 import Chat from '../screens/Chat';
 
-//  Components 
+//  Components
 import DrawerContent from '../components/DrawerContent';
 
 const Stack = createStackNavigator();
@@ -20,21 +20,21 @@ const Drawer = createDrawerNavigator();
 
 const HomeStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="HomeScreen" component={Home} />
+    <Stack.Navigator headerMode={false}>
+      <Stack.Screen name="HomeScreen" component={Home} headerShown={false} />
     </Stack.Navigator>
   );
 };
 const LoginStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="LoginScreen" component={Login} />
+    <Stack.Navigator headerMode={false}>
+      <Stack.Screen name="LoginScreen" component={Login} headerShown={false} />
     </Stack.Navigator>
   );
 };
 const ChatStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator headerMode={false}>
       <Stack.Screen name="LoginScreen" component={Chat} />
     </Stack.Navigator>
   );
