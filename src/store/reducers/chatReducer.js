@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  chatPartnerUID: null,
+  chatPartner: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -7,7 +7,7 @@ export default (state = INITIAL_STATE, action) => {
     case 'CHAT_WITH_UID':
       return {
         ...state,
-        chatPartnerUID: action.payload.uid,
+        chatPartner: action.payload.charPartner,
       };
     case 'INITIALIZATION':
       return {

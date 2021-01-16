@@ -15,7 +15,7 @@ import {
 
 import {connect} from 'react-redux';
 import {userAction, initializationAction} from '../store/actions/homeActions';
-import {chatPartnerUIDAction} from '../store/actions/chatActions';
+import {chatPartnerAction} from '../store/actions/chatActions';
 
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
@@ -28,11 +28,8 @@ const Home = ({
   initializationActionSet,
   initializing,
   navigation,
-  chatPartnerUID,
-  chatPartnerUIDActionSet,
+  chatPartnerActionSet,
 }) => {
-  // Set an initializing state whilst Firebase connects
-  // const [initializing, setInitializing] = useState(true);
   const [usersList, setUserList] = useState([]);
 
   // Handle user state changes
@@ -43,7 +40,6 @@ const Home = ({
       userActionSet(null);
       navigation.navigate('LoginScreen');
     }
-    // console.log(user);
     if (initializing) initializationActionSet(false);
   };
 
@@ -64,19 +60,23 @@ const Home = ({
 
   const usersListFetch = async () => {
     if (user) {
-      // try {
-      database()
-        .ref('/')
-        .child(`/users/`)
-        .on('value', (data) => {
-          const dataObj = data.val();
-          dataObj && setUserList([...usersList, {...dataObj}]);
-        });
-      // } catch {
-      //   console.log("dsd")
-      //   setUserList([]);
-      // }
+      try {
+        database()
+          .ref('/')
+          .child(`/users/`)
+          .on('value', (data) => {
+            const dataObj = data.val();
+            dataObj && setUserList([...usersList, {...dataObj}]);
+          });
+      } catch {
+        setUserList([]);
+      }
     }
+  };
+
+  const chatStart = (charPartner) => {
+    chatPartnerActionSet(charPartner);
+    navigation.navigate('ChatScreen');
   };
 
   useEffect(() => {
@@ -92,21 +92,14 @@ const Home = ({
     usersListFetch();
   }, []);
 
-  useEffect(() => {
-    console.log(chatPartnerUID);
-  }, [chatPartnerUID]);
-
   return (
     <>
       {!initializing && (
         <>
-          <Header navigation={navigation} screenName="Home" />
+          <Header navigation={navigation} screenName="HomeScreen" />
           <View style={styles.container}>
-            {/* {!user && <Button title="Facebook Login" onPress={facebookLogin} />} */}
             {user && (
               <View>
-                {/* <Text>Name: {user.displayName}</Text>
-              <Text>uid: {user.uid}</Text> */}
                 {usersList.length != 0 && (
                   <View>
                     {Object.keys(usersList[0]).map((key, i) => {
@@ -116,9 +109,7 @@ const Home = ({
                             key={i}
                             style={styles.userList}
                             activeOpacity={0.9}
-                            onPress={() =>
-                              chatPartnerUIDActionSet(usersList[0][key].uid)
-                            }>
+                            onPress={() => chatStart(usersList[0][key])}>
                             <Image
                               source={{uri: usersList[0][key].photoURL}}
                               style={styles.usersPhoto}
@@ -170,14 +161,13 @@ const mapStateToProps = (state) => {
   return {
     initializing: state.homeReducer.initializing,
     user: state.homeReducer.user,
-    chatPartnerUID: state.chatReducer.chatPartnerUID,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     userActionSet: (user) => dispatch(userAction(user)),
     initializationActionSet: (flag) => dispatch(initializationAction(flag)),
-    chatPartnerUIDActionSet: (uid) => dispatch(chatPartnerUIDAction(uid)),
+    chatPartnerActionSet: (uid) => dispatch(chatPartnerAction(uid)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

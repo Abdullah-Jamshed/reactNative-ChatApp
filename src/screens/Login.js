@@ -51,16 +51,15 @@ const Login = ({
     auth()
       .signInWithCredential(facebookCredential)
       .then((user) => {
-        console.log('user ==>', user);
+        // console.log('user ==>', user);
       })
       .catch((err) => {
         setLoading(false);
-        console.log('error ==>', err);
+        // console.log('error ==>', err);
       });
   };
 
   function onAuthStateChanged(user) {
-    console.log(user);
     if (user) {
       setLoading(false);
       userActionSet(user);

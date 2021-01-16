@@ -1,4 +1,7 @@
 import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+
+import Header from '../components/Header';
 
 import {
   SafeAreaView,
@@ -10,12 +13,18 @@ import {
   Button,
 } from 'react-native';
 
-const Chat = ({navigation}) => {
+const Chat = ({navigation, chatPartner}) => {
+  // console.log(chatPartner);
   return (
     <>
-      <View style={styles.container}>
-        <Button title="Go back" onPress={() => navigation.goBack()} />
-      </View>
+      {chatPartner.uid && (
+        <View style={styles.container}>
+          <Header screenName="ChatScreen" navigation={navigation} />
+          <View>
+            <Button title="Go back" onPress={() => navigation.goBack()} />
+          </View>
+        </View>
+      )}
     </>
   );
 };
@@ -23,9 +32,15 @@ const Chat = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
-export default Chat;
+const mapStateToProps = (state) => {
+  return {
+    chatPartner: state.chatReducer.chatPartner,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);

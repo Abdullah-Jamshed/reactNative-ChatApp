@@ -1,18 +1,51 @@
 import React from 'react';
-import {View, Text, Button, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, Image, StyleSheet, Dimensions} from 'react-native';
+
+import {connect} from 'react-redux';
+import {chatPartnerAction} from '../store/actions/chatActions';
+
+// icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const {width, height} = Dimensions.get('window');
 
-const Header = ({navigation, screenName}) => {
+const Header = ({
+  navigation,
+  screenName,
+  chatPartner,
+  chatPartnerActionSet,
+}) => {
   return (
     <View style={styles.container}>
-      <Ionicons
-        name="md-menu-outline"
-        onPress={() => navigation.openDrawer()}
-        size={30}
-      />
-      <Text style={styles.headerTitle}>{screenName}</Text>
+      {screenName == 'HomeScreen' && (
+        <Ionicons
+          name="md-menu-outline"
+          onPress={() => navigation.openDrawer()}
+          size={30}
+        />
+      )}
+      {screenName == 'ChatScreen' && (
+        <>
+          <Ionicons
+            name="chevron-back"
+            onPress={() => {
+              chatPartnerActionSet({});
+              navigation.goBack();
+            }}
+            size={30}
+          />
+          <Image
+            source={{uri: chatPartner.photoURL}}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 40,
+              marginHorizontal: 7,
+            }}
+          />
+          <Text style={styles.headerTitle}>{chatPartner.name}</Text>
+        </>
+      )}
     </View>
   );
 };
@@ -21,9 +54,8 @@ const styles = StyleSheet.create({
   container: {
     // flex: 1,
     flexDirection: 'row',
-    // justifyContent: 'center',
     alignItems: 'center',
-    height: height / 12,
+    height: height / 10,
     backgroundColor: '#e5e5e5',
     paddingHorizontal: 20,
     shadowColor: '#000',
@@ -43,4 +75,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    chatPartner: state.chatReducer.chatPartner,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    chatPartnerActionSet: (uid) => dispatch(chatPartnerAction(uid)),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

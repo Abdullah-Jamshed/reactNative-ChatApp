@@ -1,6 +1,6 @@
-const chatPartnerUIDAction = (uid) => {
+const chatPartnerAction = (charPartner) => {
   return (dispatch) => {
-    dispatch({type: 'CHAT_WITH_UID', payload: {uid}});
+    dispatch({type: 'CHAT_WITH_UID', payload: {charPartner}});
   };
 };
 
@@ -10,4 +10,4 @@ const chatPartnerUIDAction = (uid) => {
 //     };
 //   };
 
-export {chatPartnerUIDAction};
+export {chatPartnerAction};
