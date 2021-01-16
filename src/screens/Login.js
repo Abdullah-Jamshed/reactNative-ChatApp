@@ -27,15 +27,19 @@ const Login = ({
 
   const facebookLogin = async () => {
     setLoading(true);
+
     const result = await LoginManager.logInWithPermissions([
       'public_profile',
       'email',
     ]);
+
     if (result.isCancelled) {
+      setLoading(false);
       throw 'User cancelled the login process';
     }
 
     const data = await AccessToken.getCurrentAccessToken();
+
     if (!data) {
       throw 'Something went wrong obtaining access token';
     }
@@ -47,15 +51,16 @@ const Login = ({
     auth()
       .signInWithCredential(facebookCredential)
       .then((user) => {
-        // console.log('user ==>', user);
+        console.log('user ==>', user);
       })
       .catch((err) => {
+        setLoading(false);
         console.log('error ==>', err);
       });
   };
 
   function onAuthStateChanged(user) {
-    // console.log(user);
+    console.log(user);
     if (user) {
       setLoading(false);
       userActionSet(user);

@@ -4,10 +4,10 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'CHAT_WITH':
+    case 'CHAT_WITH_UID':
       return {
         ...state,
-        chatPartnerUID: action.payload.chatPartnerUID,
+        chatPartnerUID: action.payload.uid,
       };
     case 'INITIALIZATION':
       return {

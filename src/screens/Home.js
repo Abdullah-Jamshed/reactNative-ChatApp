@@ -9,11 +9,13 @@ import {
   StatusBar,
   Button,
   ClippingRectangle,
+  TouchableOpacity,
   Image,
 } from 'react-native';
 
 import {connect} from 'react-redux';
 import {userAction, initializationAction} from '../store/actions/homeActions';
+import {chatPartnerUIDAction} from '../store/actions/chatActions';
 
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
@@ -26,6 +28,8 @@ const Home = ({
   initializationActionSet,
   initializing,
   navigation,
+  chatPartnerUID,
+  chatPartnerUIDActionSet,
 }) => {
   // Set an initializing state whilst Firebase connects
   // const [initializing, setInitializing] = useState(true);
@@ -89,8 +93,8 @@ const Home = ({
   }, []);
 
   useEffect(() => {
-    console.log(usersList);
-  }, [usersList]);
+    console.log(chatPartnerUID);
+  }, [chatPartnerUID]);
 
   return (
     <>
@@ -106,16 +110,23 @@ const Home = ({
                 {usersList.length != 0 && (
                   <View>
                     {Object.keys(usersList[0]).map((key, i) => {
-                      console.log(key);
                       return (
                         usersList[0][key].uid !== user.uid && (
-                          <View key={i} style={styles.userList}>
+                          <TouchableOpacity
+                            key={i}
+                            style={styles.userList}
+                            activeOpacity={0.9}
+                            onPress={() =>
+                              chatPartnerUIDActionSet(usersList[0][key].uid)
+                            }>
                             <Image
                               source={{uri: usersList[0][key].photoURL}}
                               style={styles.usersPhoto}
                             />
-                            <Text>{usersList[0][key].name}</Text>
-                          </View>
+                            <Text style={styles.userName}>
+                              {usersList[0][key].name}
+                            </Text>
+                          </TouchableOpacity>
                         )
                       );
                     })}
@@ -133,6 +144,7 @@ const Home = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#ffff',
   },
   userList: {
     flexDirection: 'row',
@@ -149,19 +161,23 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginRight: 10,
   },
-  userName: {},
+  userName: {
+    fontSize: 15,
+  },
 });
 
 const mapStateToProps = (state) => {
   return {
     initializing: state.homeReducer.initializing,
     user: state.homeReducer.user,
+    chatPartnerUID: state.chatReducer.chatPartnerUID,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     userActionSet: (user) => dispatch(userAction(user)),
     initializationActionSet: (flag) => dispatch(initializationAction(flag)),
+    chatPartnerUIDActionSet: (uid) => dispatch(chatPartnerUIDAction(uid)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

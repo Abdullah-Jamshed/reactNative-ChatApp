@@ -26,6 +26,15 @@ const styles = StyleSheet.create({
     height: height / 12,
     backgroundColor: '#e5e5e5',
     paddingHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   headerTitle: {
     fontSize: 16,

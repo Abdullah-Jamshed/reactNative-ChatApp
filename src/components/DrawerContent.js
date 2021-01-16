@@ -17,7 +17,7 @@ import auth from '@react-native-firebase/auth';
 const {width, height} = Dimensions.get('window');
 
 const DrawrContent = ({navigation, user}) => {
-//   console.log('Login user ==>', user);
+  //   console.log('Login user ==>', user);
   const signOut = () => {
     auth().signOut();
   };
@@ -30,27 +30,30 @@ const DrawrContent = ({navigation, user}) => {
             <Image source={{uri: user.photoURL}} style={styles.profilePic} />
             <Text style={styles.userName}>{user.displayName}</Text>
           </View>
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              width: '100%',
-              backgroundColor: 'green',
-            }}>
-            <TouchableOpacity
-              onPress={signOut}
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <View
               style={{
-                paddingVertical: 20,
-                paddingHorizontal: 25,
-                backgroundColor: '#f5f5f5',
+                // position: 'absolute',
+                // bottom: 0,
+                alignSelf: 'flex-end',
+                width: '100%',
+                justifyContent: 'flex-end',
               }}>
-              <Text
+              <TouchableOpacity
+                onPress={signOut}
                 style={{
-                  fontSize: 16,
+                  paddingVertical: 20,
+                  paddingHorizontal: 25,
+                  backgroundColor: '#f5f5f5',
                 }}>
-                SignOut
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: 16,
+                  }}>
+                  SignOut
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       )}
@@ -69,6 +72,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    borderBottomColor: '#e3e3e3',
+    borderBottomWidth: 1,
   },
   profilePic: {
     width: 40,
