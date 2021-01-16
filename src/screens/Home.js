@@ -8,6 +8,8 @@ import {
   Text,
   StatusBar,
   Button,
+  ClippingRectangle,
+  Image,
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -15,6 +17,8 @@ import {userAction, initializationAction} from '../store/actions/homeActions';
 
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
+
+import Header from '../components/Header';
 
 const Home = ({
   user,
@@ -48,6 +52,7 @@ const Home = ({
         database().ref('/users').child(`/${user.uid}/`).set({
           name: user.displayName,
           uid: user.uid,
+          photoURL: user.photoURL,
         });
       }
     }
@@ -55,21 +60,17 @@ const Home = ({
 
   const usersListFetch = async () => {
     if (user) {
-      const users = await database()
+      // try {
+      database()
         .ref('/')
         .child(`/users/`)
         .on('value', (data) => {
           const dataObj = data.val();
-          // console.log([...usersList]);
-          // console.log('dataObj ===>', {...usersList, {...dataObj}});
-          setUserList([...usersList, {...dataObj}]);
+          dataObj && setUserList([...usersList, {...dataObj}]);
         });
-
-      // if (!value) {
-      //   database().ref('/users').child(`/${user.uid}/`).set({
-      //     name: user.displayName,
-      //     uid: user.uid,
-      //   });
+      // } catch {
+      //   console.log("dsd")
+      //   setUserList([]);
       // }
     }
   };
@@ -82,30 +83,48 @@ const Home = ({
   useEffect(() => {
     userInDatabase();
   }, []);
+
   useEffect(() => {
     usersListFetch();
   }, []);
 
+  useEffect(() => {
+    console.log(usersList);
+  }, [usersList]);
+
   return (
     <>
       {!initializing && (
-        <View style={styles.container}>
-          {/* {!user && <Button title="Facebook Login" onPress={facebookLogin} />} */}
-          {user && (
-            <View>
-              {/* <Text>Name: {user.displayName}</Text>
+        <>
+          <Header navigation={navigation} screenName="Home" />
+          <View style={styles.container}>
+            {/* {!user && <Button title="Facebook Login" onPress={facebookLogin} />} */}
+            {user && (
+              <View>
+                {/* <Text>Name: {user.displayName}</Text>
               <Text>uid: {user.uid}</Text> */}
-              {usersList.length &&
-                Object.keys(usersList[0]).map((key, i) => {
-                  return (
-                    usersList[0][key].name !== user.displayName && (
-                      <Text key={i}>name : {usersList[0][key].name}</Text>
-                    )
-                  );
-                })}
-            </View>
-          )}
-        </View>
+                {usersList.length != 0 && (
+                  <View>
+                    {Object.keys(usersList[0]).map((key, i) => {
+                      console.log(key);
+                      return (
+                        usersList[0][key].uid !== user.uid && (
+                          <View key={i} style={styles.userList}>
+                            <Image
+                              source={{uri: usersList[0][key].photoURL}}
+                              style={styles.usersPhoto}
+                            />
+                            <Text>{usersList[0][key].name}</Text>
+                          </View>
+                        )
+                      );
+                    })}
+                  </View>
+                )}
+              </View>
+            )}
+          </View>
+        </>
       )}
     </>
   );
@@ -114,9 +133,23 @@ const Home = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
+  userList: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f8f8f8',
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderBottomColor: '#e3e3e3',
+    borderBottomWidth: 1,
+  },
+  usersPhoto: {
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    marginRight: 10,
+  },
+  userName: {},
 });
 
 const mapStateToProps = (state) => {

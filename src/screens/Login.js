@@ -21,8 +21,8 @@ const Login = ({
   navigation,
   initializing,
   initializationActionSet,
+  user,
 }) => {
-
   const [loading, setLoading] = useState(false);
 
   const facebookLogin = async () => {
