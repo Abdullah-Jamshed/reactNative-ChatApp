@@ -89,9 +89,7 @@ const Chat = ({navigation, chatPartner, user}) => {
     fetchMassages();
   }, [chatId]);
 
-  useEffect(() => {
-    console.log('messageList ===>>>>', messagesList);
-  }, [messagesList]);
+
 
   return (
     <>
