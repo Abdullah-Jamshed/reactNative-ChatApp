@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 
 import {
   SafeAreaView,
@@ -36,6 +36,8 @@ const Chat = ({
   const [chatId, setChatId] = useState(null);
   const [messagesList, setMessageList] = useState([]);
 
+  const scrollEnd = useRef('');
+
   const chattingIDGernate = () => {
     if (user.uid < chatPartner.uid) {
       setChatId('chat_' + user.uid + '_' + chatPartner.uid);
@@ -45,23 +47,28 @@ const Chat = ({
   };
 
   const fetchMassages = () => {
+    // database()
+    //   .ref('/')
+    //   .child(`/messages/${chatId}`)
+    //   .on('child_added', (snap) => {
+    //     console.log('snap child_added', snap.val());
+    //   });
     if (chatId) {
       try {
+        var arr = [];
         database()
           .ref('/')
           .child(`/messages/${chatId}`)
-          .on('value', (data) => {
-            if (data.val()) {
+          .on('child_added', (data) => {
+            if (data.exists()) {
               var dataObj = data.val();
-              var arr = [];
-              Object.keys(dataObj).forEach((key) => {
-                arr.push(dataObj[key]);
-                // setMessageList([...messagesList, dataObj[key]]);
-              });
-              setMessageList(arr);
+              arr.push(dataObj);
             } else {
               setMessageList([]);
             }
+            setMessageList([...messagesList, ...arr])
+            // messagesList.push();
+            // arr.length > 1 ? setMessageList([...messagesList, ...arr]):setMessageList([...messagesList, ...arr])
           });
       } catch {
         console.log('error');
@@ -73,22 +80,17 @@ const Chat = ({
     setChatId(null);
     setMessageList([]);
   };
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (chatId && value !== '') {
       onChangeText('');
       const key = database().ref().push().key;
-      console.log(key);
-      database().ref('/').child(`/messages/${chatId}/${key}/`).set({
+      database().ref('/').child(`/messages/${chatId}/${key}`).set({
         key,
         uid: user.uid,
         message: value,
       });
     }
   };
-
-  // useEffect(() => {
-  //   console.log(messagesList);
-  // }, [messagesList]);
 
   useEffect(() => {
     if (chatPartner.uid) {
@@ -99,6 +101,10 @@ const Chat = ({
   useEffect(() => {
     fetchMassages();
   }, [chatId]);
+
+  useEffect(() => {
+    console.log('messageList ===>>>>', messagesList.length);
+  }, [messagesList]);
 
   return (
     <>
@@ -111,7 +117,7 @@ const Chat = ({
           />
 
           <View style={styles.chatPanel}>
-            <ScrollView>
+            <ScrollView ref={scrollEnd}>
               {messagesList.length != 0 && (
                 <View>
                   {messagesList.map((massageObj) => {
@@ -174,6 +180,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f9f9f9',
     overflow: 'scroll',
+    paddingTop: 20,
   },
   chatSend: {
     flexDirection: 'row',
@@ -195,8 +202,8 @@ const styles = StyleSheet.create({
     // maxWidth: '70%',
     // alignSelf:"flex-end",
     // maxWidth: width / 2,
-    marginVertical: 10,
-    backgroundColor: 'red',
+    // marginVertical: 10,
+    // backgroundColor: 'red',
     paddingVertical: 10,
     paddingHorizontal: 10,
     alignItems: 'flex-end',
@@ -204,12 +211,13 @@ const styles = StyleSheet.create({
   otherChat: {
     // margin:
     paddingVertical: 10,
-    marginVertical: 10,
-    backgroundColor: 'red',
+    // marginVertical: 10,
+    // backgroundColor: 'red',
     paddingHorizontal: 10,
     alignItems: 'flex-start',
   },
   chatTextContainer1: {
+    minWidth: width / 3,
     maxWidth: width / 1.5,
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -217,6 +225,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0084ff',
   },
   chatTextContainer2: {
+    minWidth: width / 3,
     maxWidth: width / 1.5,
     paddingVertical: 10,
     paddingHorizontal: 10,
