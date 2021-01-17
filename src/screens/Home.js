@@ -161,13 +161,14 @@ const mapStateToProps = (state) => {
   return {
     initializing: state.homeReducer.initializing,
     user: state.homeReducer.user,
+    chattingID: state.chatReducer.chattingID,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     userActionSet: (user) => dispatch(userAction(user)),
     initializationActionSet: (flag) => dispatch(initializationAction(flag)),
-    chatPartnerActionSet: (uid) => dispatch(chatPartnerAction(uid)),
+    chatPartnerActionSet: (dataObj) => dispatch(chatPartnerAction(dataObj)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

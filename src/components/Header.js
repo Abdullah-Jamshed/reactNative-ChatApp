@@ -2,7 +2,10 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, Dimensions} from 'react-native';
 
 import {connect} from 'react-redux';
-import {chatPartnerAction} from '../store/actions/chatActions';
+import {
+  chatPartnerAction,
+  chattingIDAction,
+} from '../store/actions/chatActions';
 
 // icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,7 +17,13 @@ const Header = ({
   screenName,
   chatPartner,
   chatPartnerActionSet,
+  chattingIDActionSet,
+  backButtonFunc,
 }) => {
+  const back = () => {
+    backButtonFunc();
+  };
+
   return (
     <View style={styles.container}>
       {screenName == 'HomeScreen' && (
@@ -30,6 +39,8 @@ const Header = ({
             name="chevron-back"
             onPress={() => {
               chatPartnerActionSet({});
+              back();
+              // chattingIDActionSet(null);
               navigation.goBack();
             }}
             size={30}
@@ -83,6 +94,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     chatPartnerActionSet: (uid) => dispatch(chatPartnerAction(uid)),
+    chattingIDActionSet: (id) => dispatch(chattingIDAction(id)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

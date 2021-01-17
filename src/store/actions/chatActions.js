@@ -3,6 +3,11 @@ const chatPartnerAction = (charPartner) => {
     dispatch({type: 'CHAT_WITH_UID', payload: {charPartner}});
   };
 };
+const chattingIDAction = (id) => {
+  return (dispatch) => {
+    dispatch({type: 'CHATTING_ID', payload: {id}});
+  };
+};
 
 //   const initializationAction = (flag) => {
 //     return (dispatch) => {
@@ -10,4 +15,4 @@ const chatPartnerAction = (charPartner) => {
 //     };
 //   };
 
-export {chatPartnerAction};
+export {chatPartnerAction, chattingIDAction};
