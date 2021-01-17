@@ -47,12 +47,6 @@ const Chat = ({
   };
 
   const fetchMassages = () => {
-    // database()
-    //   .ref('/')
-    //   .child(`/messages/${chatId}`)
-    //   .on('child_added', (snap) => {
-    //     console.log('snap child_added', snap.val());
-    //   });
     if (chatId) {
       try {
         var arr = [];
@@ -66,9 +60,7 @@ const Chat = ({
             } else {
               setMessageList([]);
             }
-            setMessageList([...messagesList, ...arr])
-            // messagesList.push();
-            // arr.length > 1 ? setMessageList([...messagesList, ...arr]):setMessageList([...messagesList, ...arr])
+            setMessageList([...messagesList, ...arr]);
           });
       } catch {
         console.log('error');
@@ -103,7 +95,7 @@ const Chat = ({
   }, [chatId]);
 
   useEffect(() => {
-    console.log('messageList ===>>>>', messagesList.length);
+    console.log('messageList ===>>>>', messagesList);
   }, [messagesList]);
 
   return (
@@ -117,7 +109,11 @@ const Chat = ({
           />
 
           <View style={styles.chatPanel}>
-            <ScrollView ref={scrollEnd}>
+            <ScrollView
+              ref={scrollEnd}
+              onContentSizeChange={(width, height) =>
+                scrollEnd.current.scrollTo({y: height})
+              }>
               {messagesList.length != 0 && (
                 <View>
                   {messagesList.map((massageObj) => {
@@ -181,6 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     overflow: 'scroll',
     paddingTop: 20,
+    // transform: [{rotate: '180deg'}],
   },
   chatSend: {
     flexDirection: 'row',
