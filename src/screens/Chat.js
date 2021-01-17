@@ -1,13 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-
-// components
-import Header from '../components/Header';
-
-//icons
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-import {chatPartnerAction} from '../store/actions/chatActions';
 
 import {
   SafeAreaView,
@@ -18,9 +9,21 @@ import {
   StatusBar,
   Button,
   TextInput,
+  Dimensions,
 } from 'react-native';
 
+// components
+import Header from '../components/Header';
+
+//icons
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import {connect} from 'react-redux';
+import {chatPartnerAction} from '../store/actions/chatActions';
+
 import database from '@react-native-firebase/database';
+
+const {width, height} = Dimensions.get('window');
 
 const Chat = ({
   navigation,
@@ -34,7 +37,6 @@ const Chat = ({
   const [messagesList, setMessageList] = useState([]);
 
   const chattingIDGernate = () => {
-    console.log(chatPartner.name);
     if (user.uid < chatPartner.uid) {
       setChatId('chat_' + user.uid + '_' + chatPartner.uid);
     } else {
@@ -42,10 +44,7 @@ const Chat = ({
     }
   };
 
-
-
   const fetchMassages = () => {
-    // console.log('chat id before fetch data ===> ', chatId);
     if (chatId) {
       try {
         database()
@@ -72,11 +71,24 @@ const Chat = ({
 
   const backButton = () => {
     setChatId(null);
+    setMessageList([]);
+  };
+  const sendMessage = () => {
+    if (chatId && value !== '') {
+      onChangeText('');
+      const key = database().ref().push().key;
+      console.log(key);
+      database().ref('/').child(`/messages/${chatId}/${key}/`).set({
+        key,
+        uid: user.uid,
+        message: value,
+      });
+    }
   };
 
-  useEffect(() => {
-    console.log(messagesList);
-  }, [messagesList]);
+  // useEffect(() => {
+  //   console.log(messagesList);
+  // }, [messagesList]);
 
   useEffect(() => {
     if (chatPartner.uid) {
@@ -100,7 +112,37 @@ const Chat = ({
 
           <View style={styles.chatPanel}>
             <ScrollView>
-              {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
+              {messagesList.length != 0 && (
+                <View>
+                  {messagesList.map((massageObj) => {
+                    return (
+                      <View
+                        key={massageObj.key}
+                        style={
+                          massageObj.uid === user.uid
+                            ? styles.myChat
+                            : styles.otherChat
+                        }>
+                        <View
+                          style={
+                            massageObj.uid === user.uid
+                              ? styles.chatTextContainer1
+                              : styles.chatTextContainer2
+                          }>
+                          <Text
+                            style={
+                              massageObj.uid === user.uid
+                                ? styles.chatText1
+                                : styles.chatText2
+                            }>
+                            {massageObj.message}
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+              )}
             </ScrollView>
           </View>
           <View style={styles.chatSend}>
@@ -115,8 +157,8 @@ const Chat = ({
               name="send"
               onPress={() => navigation.openDrawer()}
               size={30}
+              onPress={sendMessage}
             />
-            {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
           </View>
         </View>
       )}
@@ -148,6 +190,44 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingLeft: 15,
     backgroundColor: '#ffff',
+  },
+  myChat: {
+    // maxWidth: '70%',
+    // alignSelf:"flex-end",
+    // maxWidth: width / 2,
+    marginVertical: 10,
+    backgroundColor: 'red',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    alignItems: 'flex-end',
+  },
+  otherChat: {
+    // margin:
+    paddingVertical: 10,
+    marginVertical: 10,
+    backgroundColor: 'red',
+    paddingHorizontal: 10,
+    alignItems: 'flex-start',
+  },
+  chatTextContainer1: {
+    maxWidth: width / 1.5,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: '#0084ff',
+  },
+  chatTextContainer2: {
+    maxWidth: width / 1.5,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: '#e4e6eb',
+  },
+  chatText1: {
+    color: '#fff',
+  },
+  chatText2: {
+    // color:"#fff"
   },
 });
 
