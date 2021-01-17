@@ -12,26 +12,21 @@ import {
   Dimensions,
 } from 'react-native';
 
+import {connect} from 'react-redux';
+
+
 // components
 import Header from '../components/Header';
 
 //icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {connect} from 'react-redux';
-import {chatPartnerAction} from '../store/actions/chatActions';
 
 import database from '@react-native-firebase/database';
 
 const {width, height} = Dimensions.get('window');
 
-const Chat = ({
-  navigation,
-  chatPartner,
-  user,
-  chattingID,
-  chatPartnerActionSet,
-}) => {
+const Chat = ({navigation, chatPartner, user}) => {
   const [value, onChangeText] = useState('');
   const [chatId, setChatId] = useState(null);
   const [messagesList, setMessageList] = useState([]);
@@ -177,7 +172,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     overflow: 'scroll',
     paddingTop: 20,
-    // transform: [{rotate: '180deg'}],
   },
   chatSend: {
     flexDirection: 'row',
@@ -196,20 +190,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffff',
   },
   myChat: {
-    // maxWidth: '70%',
-    // alignSelf:"flex-end",
-    // maxWidth: width / 2,
-    // marginVertical: 10,
-    // backgroundColor: 'red',
     paddingVertical: 10,
     paddingHorizontal: 10,
     alignItems: 'flex-end',
   },
   otherChat: {
-    // margin:
     paddingVertical: 10,
-    // marginVertical: 10,
-    // backgroundColor: 'red',
     paddingHorizontal: 10,
     alignItems: 'flex-start',
   },
@@ -232,9 +218,7 @@ const styles = StyleSheet.create({
   chatText1: {
     color: '#fff',
   },
-  chatText2: {
-    // color:"#fff"
-  },
+  // chatText2: {},
 });
 
 const mapStateToProps = (state) => {
@@ -244,8 +228,6 @@ const mapStateToProps = (state) => {
   };
 };
 const mapDispatchToProps = (dispatch) => {
-  return {
-    chatPartnerActionSet: (dataObj) => dispatch(chatPartnerAction(dataObj)),
-  };
+  return {};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);

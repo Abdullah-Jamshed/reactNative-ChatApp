@@ -1,6 +1,5 @@
 const INITIAL_STATE = {
   chatPartner: null,
-  // chattingID: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -10,11 +9,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         chatPartner: action.payload.charPartner,
       };
-    // case 'CHATTING_ID':
-    //   return {
-    //     ...state,
-    //     chattingID: action.payload.id,
-    //   };
     default:
       return state;
   }

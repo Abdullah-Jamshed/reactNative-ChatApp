@@ -1,17 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  Button,
-  ClippingRectangle,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 
 import {connect} from 'react-redux';
 import {userAction, initializationAction} from '../store/actions/homeActions';

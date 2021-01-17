@@ -1,14 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  Button,
-} from 'react-native';
+import {StyleSheet, View, Text, Button} from 'react-native';
 
 import {connect} from 'react-redux';
 import {userAction, initializationAction} from '../store/actions/homeActions';
@@ -21,7 +13,6 @@ const Login = ({
   navigation,
   initializing,
   initializationActionSet,
-  user,
 }) => {
   const [loading, setLoading] = useState(false);
 
