@@ -29,7 +29,6 @@ const DrawrContent = ({navigation, user}) => {
           <View style={styles.DrawerHeaer}>
             <Image source={{uri: user.photoURL}} style={styles.profilePic} />
             <Text style={styles.userName}>{user.displayName}</Text>
-            <Text style={styles.userName}>{user.displayName}</Text>
           </View>
           <View style={{flex: 1, flexDirection: 'row'}}>
             <View
